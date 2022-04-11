@@ -14,15 +14,19 @@
                                 'border-left': column % 3 === 1
                             }" 
                         >
-                            <soduko-tile :row="row - 1" :column="column - 1" :valid="true"></soduko-tile>
+                            <soduko-tile :row="row-1" :column="column-1" :valid="true"></soduko-tile>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div class="control">
-            <button @click="solveBoard">Solve Puzzle</button>
-            <button @click="clearBoard">Clear Puzzle</button>
+            <div>
+                <button @click="solveBoard">Solve Puzzle</button>
+            </div>
+            <div>
+                <button @click="clearBoard">Clear Puzzle</button>
+            </div>
         </div>
     </div>
 </template>

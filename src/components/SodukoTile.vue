@@ -1,6 +1,6 @@
 <template>
     <div class="tile" :title="value" @click="editing = true">
-        <input v-if="editing" :value="value" @change="update" @blue="update" @vnode-mounted="({ el }) => el.focus()">
+        <input v-if="editing" :value="value" @change="update" @blur="update" @vnode-mounted="({ el }) => el.focus()">
         <span v-else>{{ value }}</span>
     </div>
 </template>
