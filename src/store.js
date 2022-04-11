@@ -1,11 +1,8 @@
-/* eslint-disable no-unused-vars */
 import { reactive } from "vue"
 
-const COLUMNS = 9
-const ROWS = 9
-
 export const board = reactive(
-    Array.from(Array(COLUMNS).keys()).map((i) =>
-        Array.from(Array(ROWS).keys()).map((i) => 0)
+    Array.from(Array(9).keys()).map(
+        // eslint-disable-next-line no-unused-vars
+        (i) => Array.from(Array(9).keys()).map((i) => 0)
     )
 )
