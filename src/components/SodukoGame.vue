@@ -145,7 +145,6 @@ td {
     border-left: 3px solid #000;
 }
 div {
-    border: 1px solid #F00;
     margin: auto;
 }
 .control {
