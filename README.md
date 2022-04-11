@@ -1,4 +1,4 @@
-# moz-todo-vue
+# soduko-solver
 
 ## Project setup
 ```

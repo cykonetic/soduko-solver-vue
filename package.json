@@ -1,5 +1,6 @@
 {
-  "name": "moz-todo-vue",
+  "name": "soduko-solver-vue",
+  "author": "Nicholai Bush <cykonetic@hotmail.com>",
   "version": "0.1.0",
   "private": true,
   "scripts": {
