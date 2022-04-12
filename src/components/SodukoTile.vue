@@ -1,5 +1,5 @@
 <template>
-    <div class="tile" :title="value" :id="name" @click="editing = true">
+    <div class="tile" :title="value" :id="_id" @click="editing = true">
         <input v-if="editing" 
             :value="value" 
             @change="update" 
@@ -30,7 +30,7 @@ export default {
         value() {
             return this.board[this.column][this.row] === 0 ? '' : this.board[this.column][this.row]
         },
-        name() {
+        _id() {
             return "r" + this.row + "c" + this.column
         }
     },
@@ -39,9 +39,11 @@ export default {
             this.editing = false
             let value = parseInt(event.target.value.trim())
             // For simplicity, reset illegal values to 0
-            if (Number.isNaN(value) || value < 1 || value > 9) {
+            if (Number.isNaN(value) || value < 1) {
                 value = 0
-            }
+            } else if (value > 9) {
+                value %= 10
+            } 
             this.board[this.column][this.row] = value
         },
         navigate(event) {
@@ -52,23 +54,16 @@ export default {
                 down: 40,
             }
             if (-1 === [ key.left, key.up, key.right, key.down ].indexOf(event.which)) { return }
-
-            let id
-            switch (event.which) {
-                case key.left:
-                    id = "r" + this.row + "c" + (this.column - 1 < 0 ? 0 : this.column - 1)
-                    break
-                case key.up:
-                    id = "r" + (this.row - 1 < 0 ? 0 : this.row - 1) + "c" + this.column
-                    break
-                case key.right:
-                    id = "r" + this.row + "c" + (this.column + 1 > 8 ? 8 : this.column + 1)
-                    break
-                case key.down:    
-                    id = "r" + (this.row + 1 > 8 ? 8 : this.row + 1) + "c" + this.column
-                    break
+            // initializing to down eliminates a branch
+            let id = "r" + (this.row + 1 > 8 ? 8 : this.row + 1) + "c" + this.column
+            if (event.which === key.left) {
+                id = "r" + this.row + "c" + (this.column - 1 < 0 ? 0 : this.column - 1)
+            } else if (event.which === key.up) {
+                id = "r" + (this.row - 1 < 0 ? 0 : this.row - 1) + "c" + this.column
+            } else if (event.which === key.right) {
+                id = "r" + this.row + "c" + (this.column + 1 > 8 ? 8 : this.column + 1)
             }
-            if (id === this.name) { return }
+            if (id === this._id) { return }
             document.getElementById(id).click()
         }
     }
