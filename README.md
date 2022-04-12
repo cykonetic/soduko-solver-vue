@@ -1,4 +1,4 @@
-# soduko-solver
+# sudoku-solver
 
 ## Project setup
 ```

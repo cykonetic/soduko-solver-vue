@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div class="control">
+    <div id="soduko-container">
+        <div id="soduko-table-panel">
             <table id="soduko-table">
                 <tbody>
                     <tr v-for="row in board.length" :key="row">
@@ -20,13 +20,11 @@
                 </tbody>
             </table>
         </div>
-        <div class="control">
-            <div>
-                <button @click="solveBoard">Solve Puzzle</button>
-            </div>
-            <div>
-                <button @click="clearBoard">Clear Puzzle</button>
-            </div>
+        <div id="soduko-list-panel">
+            <ul id="soduko-ui">
+                <li><button @click="timeSolution">Solve Puzzle</button></li>
+                <li><button @click="clearBoard">Clear Puzzle</button></li>
+            </ul>
         </div>
     </div>
 </template>
@@ -95,16 +93,15 @@ export default {
                                 this.board[column][row] = digit
                                 if (this.solveBoard()) {
                                     return true
-                                } else {
-                                    this.board[column][row] = 0
                                 }
+                                this.board[column][row] = 0
                             }
                         }
                         return false
                     }
                 }
             }
-            return true
+            return true;
         },
         clearBoard() {
             for (let row = 0; row < GRID_SIZE; row++) {
@@ -112,12 +109,26 @@ export default {
                     this.board[column][row] = 0
                 }
             }
+        },
+        timeSolution() {
+            const startTime = Date.now()
+            const success = this.solveBoard()
+            const ellapsedTime = (Date.now() - startTime) / 1000
+
+            console.log((success ? 'Solved in ' : 'No solution after ') + ellapsedTime + ' seconds.')
         }
     }
 }
 </script>
 
 <style scoped>
+ul {
+    list-style: none;
+}
+li {
+    margin: 10px;
+    padding-top: 20px;
+}
 table, tr, td {
     border-collapse: collapse;
     border-spacing: 0px;
@@ -136,6 +147,15 @@ td {
     height: 50px;
     width: 50px;
 }
+button {
+    width: 100px;
+    height: 50px;
+}
+#soduko-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .border-top {
     border-top: 3px solid #000;
 }
@@ -147,11 +167,5 @@ td {
 }
 .border-left {
     border-left: 3px solid #000;
-}
-div {
-    margin: auto;
-}
-.control {
-    display: inline-block;
 }
 </style>
