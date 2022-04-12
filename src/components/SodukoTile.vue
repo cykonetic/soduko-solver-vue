@@ -1,6 +1,12 @@
 <template>
-    <div class="tile" :title="value" @click="editing = true">
-        <input v-if="editing" :value="value" @change="update" @blur="update" @vnode-mounted="({ el }) => el.focus()">
+    <div class="tile" :title="value" :id="name" @click="editing = true">
+        <input v-if="editing" 
+            :value="value" 
+            @change="update" 
+            @blur="update" 
+            @keydown="navigate"
+            @vnode-mounted="({ el }) => el.focus()"
+        >
         <span v-else>{{ value }}</span>
     </div>
 </template>
@@ -23,6 +29,9 @@ export default {
     computed: {
         value() {
             return this.board[this.column][this.row] === 0 ? '' : this.board[this.column][this.row]
+        },
+        name() {
+            return "r" + this.row + "c" + this.column
         }
     },
     methods: {
@@ -35,6 +44,33 @@ export default {
             }
             this.board[this.column][this.row] = value
         },
+        navigate(event) {
+            const key = {
+                left: 37,
+                up: 38,
+                right: 39,
+                down: 40,
+            }
+            if (-1 === [ key.left, key.up, key.right, key.down ].indexOf(event.which)) { return }
+
+            let id
+            switch (event.which) {
+                case key.left:
+                    id = "r" + this.row + "c" + (this.column - 1 < 0 ? 0 : this.column - 1)
+                    break
+                case key.up:
+                    id = "r" + (this.row - 1 < 0 ? 0 : this.row - 1) + "c" + this.column
+                    break
+                case key.right:
+                    id = "r" + this.row + "c" + (this.column + 1 > 8 ? 8 : this.column + 1)
+                    break
+                case key.down:    
+                    id = "r" + (this.row + 1 > 8 ? 8 : this.row + 1) + "c" + this.column
+                    break
+            }
+            if (id === this.name) { return }
+            document.getElementById(id).click()
+        }
     }
 }
 </script>

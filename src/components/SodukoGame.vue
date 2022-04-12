@@ -24,6 +24,7 @@
             <ul id="soduko-ui">
                 <li><button @click="timeSolution">Solve Puzzle</button></li>
                 <li><button @click="clearBoard">Clear Puzzle</button></li>
+                <li>{{ message }}</li>
             </ul>
         </div>
     </div>
@@ -42,23 +43,20 @@ export default {
     },
     data() {
         return {
+            message: '',
             board
         }
     },
     methods: {
         isDigitInRow(digit, row) {
             for (let column = 0; column < GRID_SIZE; column++) {
-                if (this.board[column][row] === digit) {
-                    return true
-                }
+                if (this.board[column][row] === digit) { return true }
             }
             return false
         },
         isDigitInColumn(digit, column) {
             for (let row = 0; row < GRID_SIZE; row++) {
-                if (this.board[column][row] === digit) {
-                    return true;
-                }
+                if (this.board[column][row] === digit) { return true }
             }
             return false
         },
@@ -70,38 +68,33 @@ export default {
 
             for (let column = startColumn; column < endColumn; column++) {
                 for (let row = startRow; row < endRow; row++) {
-                    if (this.board[column][row] === digit) {
-                        return true
-                    }
+                    if (this.board[column][row] === digit) { return true }
                 }
             }
             return false
         },
         isValidPlacement(digit, row, column) {
             return !(
+                this.isDigitInBox(digit, row, column) ||
                 this.isDigitInRow(digit, row) ||
-                this.isDigitInColumn(digit, column) ||
-                this.isDigitInBox(digit, row, column)
+                this.isDigitInColumn(digit, column)
             )
         },
         solveBoard() {
             for (let row = 0; row < GRID_SIZE; row++) {
                 for (let column = 0; column < GRID_SIZE; column++) {
-                    if (this.board[column][row] === 0) {
-                        for (let digit = 1; digit < 10; digit++) {
-                            if (this.isValidPlacement(digit, row, column)) {
-                                this.board[column][row] = digit
-                                if (this.solveBoard()) {
-                                    return true
-                                }
-                                this.board[column][row] = 0
-                            }
+                    if (this.board[column][row] !== 0) { continue }
+                    for (let digit = 1; digit < 10; digit++) {
+                        if (this.isValidPlacement(digit, row, column)) {
+                            this.board[column][row] = digit
+                            if (this.solveBoard()) { return true }
+                            this.board[column][row] = 0
                         }
-                        return false
                     }
+                    return false        
                 }
             }
-            return true;
+            return true
         },
         clearBoard() {
             for (let row = 0; row < GRID_SIZE; row++) {
@@ -109,13 +102,13 @@ export default {
                     this.board[column][row] = 0
                 }
             }
+            this.message = ''
         },
         timeSolution() {
             const startTime = Date.now()
             const success = this.solveBoard()
             const ellapsedTime = (Date.now() - startTime) / 1000
-
-            console.log((success ? 'Solved in ' : 'No solution after ') + ellapsedTime + ' seconds.')
+            this.message = (success ? 'Solved in ' : 'No solution after ') + ellapsedTime + ' seconds.'
         }
     }
 }
