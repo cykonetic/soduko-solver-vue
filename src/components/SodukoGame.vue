@@ -14,7 +14,7 @@
                                 'border-left': column % 3 === 1
                             }" 
                         >
-                            <soduko-tile :row="row-1" :column="column-1" :valid="true"></soduko-tile>
+                            <soduko-tile :row="row-1" :column="column-1"></soduko-tile>
                         </td>
                     </tr>
                 </tbody>

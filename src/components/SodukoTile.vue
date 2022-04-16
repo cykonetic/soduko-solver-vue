@@ -1,7 +1,7 @@
 <template>
     <div class="tile" :title="value" :id="_id" @click="editing = true">
         <input v-if="editing" 
-            :value="value" 
+            :value="value"
             @change="update" 
             @blur="update" 
             @keydown="navigate"
@@ -18,11 +18,11 @@ export default {
     props: {
         column: Number,
         row: Number,
-        valid: Boolean
     },
     data() {
         return {
             editing: false,
+            valid: true,
             board,
         }
     },
@@ -37,14 +37,19 @@ export default {
     methods: {
         update(event) {
             this.editing = false
+            this.board[this.column][this.row] = 0
+            document.getElementById(this._id).classList.remove('invalid')
             let value = parseInt(event.target.value.trim())
             // For simplicity, reset illegal values to 0
-            if (Number.isNaN(value) || value < 1) {
-                value = 0
-            } else if (value > 9) {
-                value %= 10
-            } 
-            this.board[this.column][this.row] = value
+            if (!(Number.isNaN(value) || 1 > value)) {
+                if (9 < value) {
+                    value %= 10
+                }
+                if (!this.$parent.isValidPlacement(value, this.row, this.column)) {
+                    document.getElementById(this._id).classList.add('invalid')
+                }
+                this.board[this.column][this.row] = value
+            }
         },
         navigate(event) {
             const key = {
@@ -55,13 +60,13 @@ export default {
             }
             if (-1 === [ key.left, key.up, key.right, key.down ].indexOf(event.which)) { return }
             // initializing to down eliminates a branch
-            let id = "r" + (this.row + 1 > 8 ? 8 : this.row + 1) + "c" + this.column
+            let id = "r" + (this.row + 1 > 8 ? 0 : this.row + 1) + "c" + this.column
             if (event.which === key.left) {
-                id = "r" + this.row + "c" + (this.column - 1 < 0 ? 0 : this.column - 1)
+                id = "r" + this.row + "c" + (this.column - 1 < 0 ? 8 : this.column - 1)
             } else if (event.which === key.up) {
-                id = "r" + (this.row - 1 < 0 ? 0 : this.row - 1) + "c" + this.column
+                id = "r" + (this.row - 1 < 0 ? 8 : this.row - 1) + "c" + this.column
             } else if (event.which === key.right) {
-                id = "r" + this.row + "c" + (this.column + 1 > 8 ? 8 : this.column + 1)
+                id = "r" + this.row + "c" + (this.column + 1 > 8 ? 0 : this.column + 1)
             }
             if (id === this._id) { return }
             document.getElementById(id).click()
@@ -93,5 +98,8 @@ export default {
 .tile span {
     font-size: 24px;
     font-weight: bold;
+}
+.invalid {
+    background-color: #F00 ;
 }
 </style>
